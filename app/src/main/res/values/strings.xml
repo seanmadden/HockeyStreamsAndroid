@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HockeyStreams</string>
+    <string name="loginPassword">Password:</string>
+    <string name="loginUserName">User Name:</string>
+</resources>
