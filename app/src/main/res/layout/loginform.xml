@@ -36,4 +36,15 @@
                 android:inputType="textPassword"
                 android:id="@+id/loginPassword"/>
     </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+
+        <Button android:layout_width="fill_parent" android:layout_height="fill_parent"
+                android:text="Submit"
+                android:id="@+id/loginSubmit"
+                android:onClick="submitUserInfo"/>
+        </LinearLayout>
+
 </LinearLayout>

@@ -1,9 +1,12 @@
 package com.hockeystreamsgradle.api;
 
+import java.io.Serializable;
+
 /**
  * Created by sean on 2/22/15.
  */
-public class LiveGame {
+public class LiveGame implements Serializable {
+    private static final long serialVersionUID = -6828001215155631306L;
     String id;
     String event; //Could make an enum, but I think they stream other events (super bowl)
     String showScores;

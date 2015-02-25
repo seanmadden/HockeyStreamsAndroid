@@ -14,6 +14,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,19 +50,23 @@ public class HockeyStreamsActivity extends Activity {
                 TextView selectedItem = (TextView) view;
 
                 if ((selectedItem.getText().equals("Login"))) {
-                    Intent intent = new Intent(context, LoginActivity.class);
+                    final Intent intent = new Intent(context, LoginActivity.class);
                     startActivityForResult(intent, LOGIN_ACTIVITY);
+
                 } else if ((selectedItem).getText().equals("Live stream")) {
                     api.getLiveStreams(new Callback<GetLiveResponse>() {
                         @Override
                         public void success(GetLiveResponse getLiveResponse, Response response) {
                             if (getLiveResponse.getStatus().equals("Success")) {
-
+                                final Intent intent = new Intent(context, ChooseLiveGameActivity.class);
+                                intent.putExtra("schedule", (Serializable) getLiveResponse.getSchedule());
+                                startActivity(intent);
                             }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
+                            //TODO
                             System.out.println("asf");
                             System.out.println("asf");
                         }
