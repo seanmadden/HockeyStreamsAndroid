@@ -3,13 +3,14 @@ package com.hockeystreamsgradle.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import com.hockeystreamsgradle.api.APIWrapper;
 import com.hockeystreamsgradle.api.GetLiveResponse;
 import com.hockeystreamsgradle.api.LoginResponse;
-import org.w3c.dom.Text;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -23,11 +24,11 @@ import java.util.List;
  */
 public class HockeyStreamsActivity extends Activity {
     public static final int LOGIN_ACTIVITY = 1;
-    private APIWrapper api = new APIWrapper();
+    public static final String AUTH_TOKEN = "AUTH_TOKEN";
+    private final APIWrapper api = new APIWrapper();
     private Context context;
     private String username;
     private String password;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,15 @@ public class HockeyStreamsActivity extends Activity {
         setContentView(R.layout.main);
         context = this;
 
+        loadAuthToken();
+
         final List<String> actions = new ArrayList<String>();
         actions.add("Login");
         actions.add("Live stream");
         actions.add("On demand");
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, actions.toArray(new String[actions.size()]));
+        final ArrayAdapter<String>
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, actions.toArray(new String[actions.size()]));
 
         final ListView actionList = (ListView) findViewById(R.id.actionList);
         actionList.setAdapter(adapter);
@@ -76,6 +80,21 @@ public class HockeyStreamsActivity extends Activity {
         });
     }
 
+    private void loadAuthToken() {
+        final SharedPreferences prefs = getSharedPreferences("HockeyStreamsPreferences", MODE_PRIVATE);
+        final String token = prefs.getString(AUTH_TOKEN, null);
+        if (token != null) {
+            api.setToken(token);
+        }
+    }
+
+    private void storeAuthToken(final String token) {
+        final SharedPreferences prefs = getSharedPreferences("HockeyStreamsPreferences", MODE_PRIVATE);
+        Editor editor = prefs.edit();
+        editor.putString(AUTH_TOKEN, token);
+        editor.apply();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == LOGIN_ACTIVITY) {
             //TODO: null checks, etc
@@ -87,6 +106,7 @@ public class HockeyStreamsActivity extends Activity {
                 public void success(LoginResponse loginResponse, Response response) {
                     TextView tv = (TextView) findViewById(R.id.textInfo);
                     tv.setText("Login was successful!");
+                    storeAuthToken(loginResponse.getToken());
                 }
 
                 @Override

@@ -1,5 +1,6 @@
 package com.hockeystreamsgradle.api;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -13,7 +14,6 @@ public class APIWrapper {
 
     private HockeyStreamsAPI api;
     private String token;
-    private boolean loggedIn;
     private final String HOCKEY_STREAMS_ENDPOINT = "https://api.hockeystreams.com";
 
     public APIWrapper() {
@@ -22,6 +22,13 @@ public class APIWrapper {
                 .build();
 
         api = restAdapter.create(HockeyStreamsAPI.class);
+
+        //Attempt to get the token from shared preferences
+
+    }
+
+    public void setToken(final String token) {
+        this.token = token;
     }
 
     public void login(final String username, final String password, final Callback<LoginResponse> callback) {
@@ -29,9 +36,10 @@ public class APIWrapper {
             api.login(username, password, Constants.API_KEY, new Callback<LoginResponse>() {
                 @Override
                 public void success(LoginResponse loginResponse, Response response) {
-                    token = loginResponse.getToken();
-                    loggedIn = loginResponse.getStatus().equals("Success");
-                    callback.success(loginResponse, response);
+                    if (loginResponse.getStatus().equals("Success")) {
+                        token = loginResponse.getToken();
+                        callback.success(loginResponse, response);
+                    }
                 }
 
                 @Override
@@ -45,7 +53,7 @@ public class APIWrapper {
     }
 
     public void getLiveStreams(final Callback<GetLiveResponse> callback) {
-        if (!loggedIn) return;
+        if (token == null) return;
 
         try {
             api.getLive(token, callback);
