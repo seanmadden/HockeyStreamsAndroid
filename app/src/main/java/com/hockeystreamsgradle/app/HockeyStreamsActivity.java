@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.hockeystreamsgradle.api.HockeyStreamsAPI;
-import com.hockeystreamsgradle.api.LoginBody;
+import com.hockeystreamsgradle.api.APIWrapper;
+import com.hockeystreamsgradle.api.GetLiveResponse;
 import com.hockeystreamsgradle.api.LoginResponse;
-import org.json.JSONObject;
+import org.w3c.dom.Text;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -23,9 +21,12 @@ import java.util.List;
  * Created by sean on 2/22/15.
  */
 public class HockeyStreamsActivity extends Activity {
-    protected final String TAG = "HS";
-    private final String API_KEY = "17601b27272c619c8c1a0469794c5bf3";
+    public static final int LOGIN_ACTIVITY = 1;
+    private APIWrapper api = new APIWrapper();
     private Context context;
+    private String username;
+    private String password;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,43 +50,45 @@ public class HockeyStreamsActivity extends Activity {
 
                 if ((selectedItem.getText().equals("Login"))) {
                     Intent intent = new Intent(context, LoginActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-
-        final TextView tv = (TextView) findViewById(R.id.textInfo);
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://api.hockeystreams.com")
-                .build();
-
-        HockeyStreamsAPI api = restAdapter.create(HockeyStreamsAPI.class);
-        EditText loginField = (EditText) findViewById(R.id.loginUserName);
-        EditText passwordField = (EditText) findViewById(R.id.loginPassword);
-
-        try {
-            api.login(loginField.getText().toString(),
-                    passwordField.getText().toString(),
-                    API_KEY,
-                    new Callback<LoginResponse>() {
+                    startActivityForResult(intent, LOGIN_ACTIVITY);
+                } else if ((selectedItem).getText().equals("Live stream")) {
+                    api.getLiveStreams(new Callback<GetLiveResponse>() {
                         @Override
-                        public void success(LoginResponse json, Response response) {
-                            tv.setText(json.getFavteam());
-                            Log.i(TAG, "S FROM CALLBACK: " + json);
-                            Log.i(TAG, response.getBody().toString());
+                        public void success(GetLiveResponse getLiveResponse, Response response) {
+                            if (getLiveResponse.getStatus().equals("Success")) {
+
+                            }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            tv.setText("Failure");
-                            Log.e(TAG, error.toString());
+                            System.out.println("asf");
+                            System.out.println("asf");
                         }
                     });
-        } catch (Exception e) {
-            Log.i(TAG, "ERROR: ", e);
-        }
+                }
+            }
+        });
+    }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == LOGIN_ACTIVITY) {
+            //TODO: null checks, etc
+            username = intent.getExtras().get("username").toString();
+            password = intent.getExtras().get("password").toString();
+
+            api.login(username, password, new Callback<LoginResponse>() {
+                @Override
+                public void success(LoginResponse loginResponse, Response response) {
+                    TextView tv = (TextView) findViewById(R.id.textInfo);
+                    tv.setText("Login was successful!");
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                }
+            });
+        }
     }
 
 

@@ -4,6 +4,8 @@ import org.json.JSONObject;
 import retrofit.Callback;
 import retrofit.http.*;
 
+import java.util.List;
+
 /**
  * Created by sean on 2/22/15.
  */
@@ -16,6 +18,6 @@ public interface HockeyStreamsAPI {
                Callback<LoginResponse> callback);
 
     @GET("/GetLive")
-    void getLive(@Query("token") String token);
+    void getLive(@Query("token") String token, Callback<GetLiveResponse> callback);
 
 }
