@@ -20,4 +20,6 @@ public interface HockeyStreamsAPI {
     @GET("/GetLive")
     void getLive(@Query("token") String token, Callback<GetLiveResponse> callback);
 
+    @GET("/GetLiveStream")
+    void getLiveStream(@Query("token") String token, @Query("id") String id, Callback<GetLiveStreamResponse> callback);
 }

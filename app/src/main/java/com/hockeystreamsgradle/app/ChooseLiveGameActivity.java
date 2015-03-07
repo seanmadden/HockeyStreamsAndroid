@@ -48,11 +48,11 @@ public class ChooseLiveGameActivity extends Activity {
                 final LiveGame gameInfo = schedule.get(i);
 
                 //2. Build the intent
-                final Intent watchGameIntent = new Intent(context, WatchGameActivity.class);
-                watchGameIntent.putExtra("streamUrl", gameInfo.getHdUrl());
+                final Intent streamDetailsIntent = new Intent(context, StreamDetailsActivity.class);
+                streamDetailsIntent.putExtra("streamId", gameInfo.getId());
 
                 //3. Start the activity
-                startActivity(watchGameIntent);
+                startActivity(streamDetailsIntent);
             }
         });
     }

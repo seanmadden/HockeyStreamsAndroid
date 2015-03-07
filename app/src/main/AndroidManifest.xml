@@ -16,6 +16,7 @@
         </activity>
         <activity android:name=".ChooseLiveGameActivity"/>
         <activity android:name=".WatchGameActivity"/>
+        <activity android:name=".StreamDetailsActivity"/>
     </application>
 
 </manifest>

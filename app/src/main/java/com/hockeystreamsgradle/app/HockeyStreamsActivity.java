@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sean on 2/22/15.
+ * Main Activity for the hockey streams viewer
  */
 public class HockeyStreamsActivity extends Activity {
     public static final int LOGIN_ACTIVITY = 1;
     public static final String AUTH_TOKEN = "AUTH_TOKEN";
-    private final APIWrapper api = new APIWrapper();
+    private final APIWrapper api = APIWrapper.getInstance();
     private Context context;
     private String username;
     private String password;
@@ -58,7 +58,7 @@ public class HockeyStreamsActivity extends Activity {
                     startActivityForResult(intent, LOGIN_ACTIVITY);
 
                 } else if ((selectedItem).getText().equals("Live stream")) {
-                    api.getLiveStreams(new Callback<GetLiveResponse>() {
+                    api.getLive(new Callback<GetLiveResponse>() {
                         @Override
                         public void success(GetLiveResponse getLiveResponse, Response response) {
                             if (getLiveResponse.getStatus().equals("Success")) {
