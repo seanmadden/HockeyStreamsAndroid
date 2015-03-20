@@ -4,7 +4,11 @@
         android:id="@+id/main_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="96dp"
+        android:layout_marginRight="96dp"
+        android:layout_marginBottom="54dp"
+        android:layout_marginTop="54dp">
 
     <ListView android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -16,6 +20,6 @@
               android:layout_weight=".5"
               android:layout_height="fill_parent"
               android:id="@+id/textInfo"
-              android:text="TESTING"/>
+              android:text="NewTest"/>
 
 </LinearLayout>

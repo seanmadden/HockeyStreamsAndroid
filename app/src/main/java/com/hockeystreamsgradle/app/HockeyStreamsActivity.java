@@ -97,24 +97,9 @@ public class HockeyStreamsActivity extends Activity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == LOGIN_ACTIVITY) {
-            //TODO: null checks, etc
-            username = intent.getExtras().get("username").toString();
-            password = intent.getExtras().get("password").toString();
-
-            api.login(username, password, new Callback<LoginResponse>() {
-                @Override
-                public void success(LoginResponse loginResponse, Response response) {
-                    TextView tv = (TextView) findViewById(R.id.textInfo);
-                    tv.setText("Login was successful!");
-                    storeAuthToken(loginResponse.getToken());
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                }
-            });
+            TextView tv = (TextView) findViewById(R.id.textInfo);
+            tv.setText(intent.getStringExtra("TextInfo"));
+            storeAuthToken(intent.getStringExtra("AuthToken"));
         }
     }
-
-
 }
